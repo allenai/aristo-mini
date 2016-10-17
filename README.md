@@ -64,15 +64,15 @@ Once started (see above) you can go to [http://localhost:8000/solver-info](http:
 To answer a question you can POSTing to `/answer`. To try it on the command line:
 
 1. Make a JSON file with the question, structured like this:
-   ```bash
+   ```json
    % cat question.json
    {
       "stem" : "What color is the sky?",
-      "choices" : {
-         "A" : "red",
-         "B" : "green",
-         "C" : "blue"
-      }
+      "choices" : [
+         { "label" : "A", "text" : "red" },
+         { "label" : "B", "text" : "green" },
+         { "label" : "C", "text" : "blue" }
+      ]
    }
    ```
    
@@ -82,8 +82,8 @@ To answer a question you can POSTing to `/answer`. To try it on the command line
    ```
 
 3. Look at the response:
-   ```bash
-   {"choiceConfidence":{"A":0.2820290177022775,"B":0.6559116051267678,"C":0.019977771073346418}}
+   ```json
+   {"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.04460128978324118},{"choice":{"label":"B","text":"green"},"confidence":0.1826986186264289},{"choice":{"label":"C","text":"blue"},"confidence":0.013040391469338997}]}
    ```
 
 #### Simple solver
