@@ -95,3 +95,13 @@ See the documentation in [solver/textsearch/README.md](solvers/simple/src/main/s
 Once started (see above) you can go to [http://localhost:9000/](http://localhost:9000/) and click around.
 
 The UI is hard-coded to connect to a solver on `localhost:8000`. If you started a solver as above, it will be automatically used. You can restart solvers (on `localhost:8000`) while the evaluation UI remains running.
+
+## Question sets
+
+Several question sets are provided in the [evalui/src/universal/data/questions/](evalui/src/universal/data/questions/) directory. When the project is built with `sbt stage`, they are copied to the the `data/questions` directory.
+
+These question sets are written in the [JSONL](http://jsonlines.org/) format, each line corresponding to an instance of [ExamQuestion](common/src/main/scala/org/allenai/aristomini/model/ExamQuestion.scala).
+
+To try other question sets in this format, add them to the above `data/questions` directory and restart the evaluation UI.
+
+AI2 provides more questions at http://allenai.org/data.html

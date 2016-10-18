@@ -2,15 +2,18 @@ package org.allenai.aristomini.exams
 
 import org.allenai.aristomini.model.ExamMultipleChoice
 
+import java.nio.file.{ Files, Paths }
+import scala.collection.JavaConverters._
+
 /** A collection of exams. */
 object ExamCollection {
 
-  /** Exams are encoded as a map from an integer ("exam identifier") to an ExamNDMC instance */
-  val exams: Map[Int, ExamMultipleChoice] = Seq(
-    ExamMultipleChoice.fromAI2JSONLFile("data/questions/AI2-Elementary-NDMC-Feb2016-Dev.jsonl"),
-    ExamMultipleChoice.fromAI2JSONLFile("data/questions/AI2-Elementary-NDMC-Feb2016-Train.jsonl"),
-    ExamMultipleChoice.fromAI2JSONLFile("data/questions/AI2-8thGr-NDMC-Feb2016-Dev.jsonl"),
-    ExamMultipleChoice.fromAI2JSONLFile("data/questions/AI2-8thGr-NDMC-Feb2016-Train.jsonl")
+  //val questionRoot: Path = Paths.get("data/questions")
+  val examFilenames = Files.newDirectoryStream(Paths.get("data/questions"), "*.jsonl").asScala
+
+  /** Exams are encoded as a map from integer ("exam identifier") to ExamMultipleChoice */
+  val exams: Map[Int, ExamMultipleChoice] = examFilenames.map(
+    filename => ExamMultipleChoice.fromAI2JSONLFile(filename.toString)
   ).zipWithIndex.map {
     case (exam, index) => index -> exam
   }.toMap
