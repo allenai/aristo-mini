@@ -8,7 +8,6 @@ import scala.collection.JavaConverters._
 /** A collection of exams. */
 object ExamCollection {
 
-  //val questionRoot: Path = Paths.get("data/questions")
   val examFilenames = Files.newDirectoryStream(Paths.get("data/questions"), "*.jsonl").asScala
 
   /** Exams are encoded as a map from integer ("exam identifier") to ExamMultipleChoice */
