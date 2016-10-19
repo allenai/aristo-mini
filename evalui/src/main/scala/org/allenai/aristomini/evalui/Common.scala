@@ -10,9 +10,9 @@ object Common {
   /** A header, intended to prefix any human-readable content.
     * @return the header
     */
-  def header : Elem = {
+  def header: Elem = {
     <div>
-      <h1><a href="/">Evaluation UI</a></h1>
+      <h1><a href="/">Aristo mini: Evaluation UI</a></h1>
       <div>Solver connected: {solverInfoHtml}</div>
       <hr />
     </div>
