@@ -59,7 +59,13 @@ object ExamUI {
         <h1>Exam:
           {exam.description}
         </h1>
-        <h2>Evaluation progress</h2>{describeEvaluation(evaluation)}<h2>Results</h2>
+
+        <h2>Evaluation progress</h2>
+        <span>
+          {describeEvaluation(evaluation)}
+        </span>
+
+        <h2>Results</h2>
         <p>Score:
           <b>
             {f"${evaluation.score}%.0f%%"}
@@ -134,8 +140,8 @@ object ExamUI {
           {progress.numSolved}
           /
           {progress.numTotal}
-          questions done.
-          <a href="?restart=true">Abort and restart.</a>
+          questions done. Refresh page to see progress, or
+          <a href="?restart=true">abort and restart.</a>
         </p>
         <p>
           {unreachableWarning}
