@@ -7,16 +7,24 @@ import scala.xml.Elem
 /** Elements that are commonly used on all UI pages. */
 object Common {
 
-  /** A header, intended to prefix any human-readable content.
-    * @return the header
-    */
-  def header: Elem = {
-    <div>
-      <h1><a href="/">Aristo mini: Evaluation UI</a></h1>
-      <div>Solver connected: {solverInfoHtml}</div>
-      <hr />
-    </div>
-  }
+  def pageWrapper(content: Elem): String =
+    <html>
+      <head>
+        <meta charset="UTF-8"/>
+      </head>
+      <body>
+        <div>
+          <h1>
+            <a href="/">Aristo mini: Evaluation UI</a>
+          </h1>
+          <div>Solver connected:
+            {solverInfoHtml}
+          </div>
+          <hr/>
+        </div>{content}
+      </body>
+    </html>
+        .toString
 
   /** A description of the connected solver. */
   private def solverInfoHtml: Elem = {

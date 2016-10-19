@@ -9,19 +9,18 @@ import com.codahale.metrics.annotation.Timed
 
 import java.net.URI
 import javax.ws.rs._
-import javax.ws.rs.core.{ MediaType, Response }
+import javax.ws.rs.core.Response
 import scala.xml.Elem
 
 /** Handlers for exam-specific requests. */
 @Path("/eval/exam/")
+@Produces(Array("text/html; charset=utf-8"))
 object ExamUI {
 
   @GET
   @Path("/")
-  @Produces(Array(MediaType.TEXT_HTML))
   @Timed
-  def splash: String = {
-    Common.header +
+  def splash: String = Common.pageWrapper(
     <div>
       <h1>Evaluate an exam</h1>
       <h2>Available exams</h2>
@@ -35,12 +34,10 @@ object ExamUI {
       }}
       </ul>
     </div>
-    .toString
-  }
+  )
 
   @GET
   @Path("/id/{exam_id}")
-  @Produces(Array(MediaType.TEXT_HTML))
   @Timed
   def examById(
     @PathParam("exam_id") examId: Int,
@@ -57,46 +54,54 @@ object ExamUI {
     val exam = ExamCollection.exams(examId)
     val evaluation = Evaluator.evaluationForExam(examId)
 
-    Common.header +
-    <div>
-      <h1>Exam: {exam.description}</h1>
-      <h2>Evaluation progress</h2>
-      { describeEvaluation(evaluation) }
-      <h2>Results</h2>
-      <p>Score: <b>{f"${evaluation.score}%.0f%%"}</b></p>
-      { questionTable(exam, evaluation) }
-    </div>
-    .toString
+    Common.pageWrapper(
+      <div>
+        <h1>Exam:
+          {exam.description}
+        </h1>
+        <h2>Evaluation progress</h2>{describeEvaluation(evaluation)}<h2>Results</h2>
+        <p>Score:
+          <b>
+            {f"${evaluation.score}%.0f%%"}
+          </b>
+        </p>{questionTable(exam, evaluation)}
+      </div>
+    )
   }
 
   /** Generate a table for an evaluation of an exam.
-    * @param exam the exam questions to be shown
+    * @param exam       the exam questions to be shown
     * @param evaluation the evaluation of this exam so far
     * @return a table
     */
   private def questionTable(exam: ExamMultipleChoice, evaluation: Evaluation): Elem = {
     <table border="1">
-      <tr><th>Answer</th><th>Key</th><th>Question</th></tr>
-      {
-        exam.questions.zipWithIndex.map {
-          case (examQuestion: ExamQuestion, questionNumber: Int) => {
-            val answerOpt = evaluation.answerForQuestion(questionNumber)
-            val solverAnswer =
-              if (answerOpt.isEmpty) {
-                <span>pending</span>
-              }
-              else {
-                describeAnswer(examQuestion, answerOpt.get)
-              }
-
-            <tr>
-              <td style="white-space: nowrap;">{solverAnswer}</td>
-              <td>{examQuestion.answerKey}</td>
-              <td>{examQuestion.question.oneLine}</td>
-            </tr>
+      <tr>
+        <th>Answer</th> <th>Key</th> <th>Question</th>
+      </tr>{exam.questions.zipWithIndex.map {
+      case (examQuestion: ExamQuestion, questionNumber: Int) => {
+        val answerOpt = evaluation.answerForQuestion(questionNumber)
+        val solverAnswer =
+          if (answerOpt.isEmpty) {
+            <span>pending</span>
           }
-        }
+          else {
+            describeAnswer(examQuestion, answerOpt.get)
+          }
+
+        <tr>
+          <td style="white-space: nowrap;">
+            {solverAnswer}
+          </td>
+          <td>
+            {examQuestion.answerKey}
+          </td>
+          <td>
+            {examQuestion.question.oneLine}
+          </td>
+        </tr>
       }
+    }}
     </table>
   }
 
@@ -104,7 +109,7 @@ object ExamUI {
     * @param evaluation the evaluation to describe
     * @return a description
     */
-  private def describeEvaluation(evaluation: Evaluation) : Elem = {
+  private def describeEvaluation(evaluation: Evaluation): Elem = {
     val progress = evaluation.progress
     if (progress.finished) {
       <span>
@@ -125,7 +130,11 @@ object ExamUI {
 
       <div>
         <p>
-          Evaluation in progress. {progress.numSolved} / {progress.numTotal} questions done.
+          Evaluation in progress.
+          {progress.numSolved}
+          /
+          {progress.numTotal}
+          questions done.
           <a href="?restart=true">Abort and restart.</a>
         </p>
         <p>
@@ -137,7 +146,7 @@ object ExamUI {
   }
 
   /** Describe an candidate answer for a question-answer pair.
-    * @param examQuestion the exam question
+    * @param examQuestion    the exam question
     * @param candidateAnswer the candidate answer
     * @return a description
     */
@@ -157,9 +166,8 @@ object ExamUI {
         <span style="color: red">✗</span>
       }
 
-    <span title={JacksonMapper.default.writeValueAsString(candidateAnswer)} >
-      { selectedAnswer.getOrElse("?") }
-      { checkmark }
+    <span title={JacksonMapper.default.writeValueAsString(candidateAnswer)}>
+      {selectedAnswer.getOrElse("?")}{checkmark}
     </span>
   }
 }
