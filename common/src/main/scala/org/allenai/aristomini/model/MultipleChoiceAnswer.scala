@@ -9,12 +9,11 @@ case class MultipleChoiceAnswer(choiceConfidences: Seq[ChoiceConfidence]) {
 
   /** The choice with the highest confidence value. In case where there aren't any choices, or
     * when there's a tie for the top confidence, we return None.
-    * @return an optional (choice letter, confidence) tuple, or None if there isn't a best choice.
+    * @return an optional ChoiceConfidence, or None if there isn't a best choice.
     */
   def bestGuess: Option[ChoiceConfidence] =  {
 
     // get the choice with the maximum confidence
-    // val (letter, maxConfidence: Double) =
     val bestChoice: ChoiceConfidence = choiceConfidences.maxBy(_.confidence)
 
     // count number of choices with this max confidence

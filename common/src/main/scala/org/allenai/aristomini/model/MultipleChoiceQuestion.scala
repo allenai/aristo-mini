@@ -1,19 +1,8 @@
 package org.allenai.aristomini.model
 
-case class Choice (label: String, text: String)
-
-object Choice {
-  def fromSeqOfPairs(pairs: Seq[(String, String)]) : Seq[Choice] = {
-    val choices : Seq[Choice] = pairs.map {
-      case (label: String, choiceText: String) => Choice(label, choiceText)
-    }
-    choices
-  }
-}
-
 /** A Multiple Choice question
   * @param stem question text
-  * @param choices map of choice names (e.g., "A") to choice strings
+  * @param choices sequence of Choice instances
   */
 case class MultipleChoiceQuestion(stem: String, choices: Seq[Choice]) {
 

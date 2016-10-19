@@ -39,17 +39,29 @@ Included are these components:
 
 ## Terminology
 
-* **Raw question**
-  A text representation of a full question with choices in parentheses. Example: `What is the color of the sky? (A) blue (B) green (C) red (D) black`
-  
+Consider a question that might be represented on an exam like this:
+
+```
+What is the color of the sky?
+
+(A) blue
+(B) green
+(C) red
+(D) black
+```
+
+Parts of this question are named like this:
+
 * **Question stem**
-  The non-answer part of the question. Example: `What is the color of the sky?`
+  The non-choices part of the question. Example: `What is the color of the sky?`
    
 * **Answer key**
-  The correct answer. Example: `A`
+  The correct answer's choice label. Example: `A`
   
 * **Choice**
-  One of the possible answers, consisting of a **choice letter** and **choice text**. Example: `(A) blue`
+  One of the possible answers, consisting of a **choice label** (e.g., `A`) and **choice text** (e.g., `blue`).
+  
+These are represented with code in [the model/ directory](common/src/main/scala/org/allenai/aristomini/model/).
 
 ## Solvers
 
