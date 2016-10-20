@@ -73,7 +73,7 @@ This solver answers questions randomly. It illustrates the question-answer inter
 
 Once started (see above) you can go to [http://localhost:8000/solver-info](http://localhost:8000/solver-info) to confirm that it is running.
 
-To answer a question you can POSTing to `/answer`. To try it on the command line:
+To answer a question you can POST to `/answer`. To try it on the command line:
 
 1. Make a JSON file with the question, structured like this:
    ```json
