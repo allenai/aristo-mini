@@ -17,5 +17,6 @@ abstract class ServerBase(service: Object, name: String = "Server")
       case services: Seq[_] => services.foreach(environment.jersey().register(_))
       case _ => environment.jersey().register(service)
     }
+    environment.healthChecks().register("health-checker", HealthChecker)
   }
 }
