@@ -100,7 +100,7 @@ To answer a question you can POSTing to `/answer`. To try it on the command line
 
 #### Simple solver
 
-See the documentation in [solver/textsearch/README.md](solvers/simple/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md).
+See the documentation in [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md).
 
 ## The evaluation UI
 
