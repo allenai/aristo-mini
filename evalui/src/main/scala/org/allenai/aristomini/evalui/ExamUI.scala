@@ -162,7 +162,8 @@ object ExamUI {
       NodeSeq.Empty
     }
     else {
-        <meta http-equiv="refresh" content="1"/>
+        val refreshIntervalInSeconds = "1"
+        <meta http-equiv="refresh" content={refreshIntervalInSeconds}/>
     }
 
   /** Describe an candidate answer for a question-answer pair.
