@@ -10,7 +10,7 @@ import com.codahale.metrics.annotation.Timed
 import java.net.URI
 import javax.ws.rs._
 import javax.ws.rs.core.Response
-import scala.xml.Elem
+import scala.xml.{ Elem, NodeSeq }
 
 /** Handlers for exam-specific requests. */
 @Path("/eval/exam/")
@@ -55,23 +55,25 @@ object ExamUI {
     val evaluation = Evaluator.evaluationForExam(examId)
 
     Common.pageWrapper(
-      <div>
-        <h1>Exam:
-          {exam.description}
-        </h1>
+      headSupplement = htmlHeader(evaluation),
+      content =
+          <div>
+            <h1>Exam:
+              {exam.description}
+            </h1>
 
-        <h2>Evaluation progress</h2>
-        <span>
-          {describeEvaluation(evaluation)}
-        </span>
+            <h2>Evaluation progress</h2>
+            <span>
+              {describeEvaluation(evaluation)}
+            </span>
 
-        <h2>Results</h2>
-        <p>Score:
-          <b>
-            {f"${evaluation.score}%.0f%%"}
-          </b>
-        </p>{questionTable(exam, evaluation)}
-      </div>
+            <h2>Results</h2>
+            <p>Score:
+              <b>
+                {f"${evaluation.score}%.0f%%"}
+              </b>
+            </p>{questionTable(exam, evaluation)}
+          </div>
     )
   }
 
@@ -140,16 +142,28 @@ object ExamUI {
           {progress.numSolved}
           /
           {progress.numTotal}
-          questions done. Refresh page to see progress, or
-          <a href="?restart=true">abort and restart.</a>
+          questions done. Page will refresh automatically until the evaluation is finished. Or you
+          can <a href="?restart=true">abort and restart.</a>
         </p>
         <p>
           {unreachableWarning}
         </p>
       </div>
     }
-
   }
+
+  /** An HTML header supplement for an evaluation. In-progress evaluations cause the page
+    * to refresh.
+    * @param evaluation evaluation to look at progress.
+    * @return NodeSeq.empty or an HTML meta element that causes a refresh
+    */
+  private def htmlHeader(evaluation: Evaluation): NodeSeq =
+    if (evaluation.progress.finished) {
+      NodeSeq.Empty
+    }
+    else {
+        <meta http-equiv="refresh" content="1"/>
+    }
 
   /** Describe an candidate answer for a question-answer pair.
     * @param examQuestion    the exam question
