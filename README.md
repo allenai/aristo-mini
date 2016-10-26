@@ -12,6 +12,7 @@ Aristo mini
          * [Writing your own solver](#writing-your-own-solver)
    * [The evaluation UI](#the-evaluation-ui)
    * [Question sets](#question-sets)
+   * [Feedback](#feedback)
 
 # Overview
 
