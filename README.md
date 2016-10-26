@@ -95,7 +95,7 @@ To answer a question you can POST to `/answer`. To try it on the command line:
 
 3. Look at the response:
    ```json
-   {"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.04460128978324118},{"choice":{"label":"B","text":"green"},"confidence":0.1826986186264289},{"choice":{"label":"C","text":"blue"},"confidence":0.013040391469338997}]}
+{"solverInfo":"RandomGuesser","multipleChoiceAnswer":{"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.3980842820846223},{"choice":{"label":"B","text":"green"},"confidence":0.9849165494603028},{"choice":{"label":"C","text":"blue"},"confidence":0.1356729244074497}]}}
    ```
 
 #### Simple solver
