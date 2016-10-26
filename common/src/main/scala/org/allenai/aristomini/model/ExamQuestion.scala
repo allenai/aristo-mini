@@ -1,7 +1,12 @@
 package org.allenai.aristomini.model
 
-/** A question-answerkey pair */
-case class ExamQuestion(question: MultipleChoiceQuestion, answerKey: String) {
+/** An exam question.
+  *
+  * @param id an identifier for this question
+  * @param question an instance of MultipleChoiceQuestion representing this question
+  * @param answerKey the label of the correct answer
+  */
+case class ExamQuestion(id: String, question: MultipleChoiceQuestion, answerKey: String) {
 
   /** Consider a candidate answer and decide if it's correct or not.
     * @param candidate a candidate answer to a multiple choice question

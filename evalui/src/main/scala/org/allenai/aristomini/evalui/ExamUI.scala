@@ -115,7 +115,7 @@ object ExamUI {
   private def questionTable(exam: ExamMultipleChoice, evaluation: Evaluation): Elem = {
     <table border="1">
       <tr>
-        <th>Question</th> <th>Key</th> <th>Answer</th> <th>Solver</th>
+        <th>Question ID</th> <th>Question</th> <th>Key</th> <th>Answer</th> <th>Solver</th>
       </tr>{exam.questions.zipWithIndex.map {
       case (examQuestion: ExamQuestion, questionNumber: Int) => {
         val answerOpt = evaluation.solverAnswerForQuestion(questionNumber)
@@ -137,6 +137,9 @@ object ExamUI {
           }
 
         <tr>
+          <td>
+            {examQuestion.id}
+          </td>
           <td>
             {examQuestion.question.oneLine}
           </td>

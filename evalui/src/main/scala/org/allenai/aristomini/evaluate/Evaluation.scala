@@ -24,8 +24,8 @@ class Evaluation(exam: ExamMultipleChoice) {
   // Exam questions to be answered
   private val examQuestions: Seq[ExamQuestion] = exam.questions
 
-  // Answered provided by the solver, keyed on the question position in examQuestions. Initially
-  // empty.
+  // Answered provided by the solver, keyed on the question number (position in examQuestions).
+  // Initially empty.
   private val solverAnswers: mutable.Map[Integer, SolverAnswer] =
     scala.collection.mutable.Map[Integer, SolverAnswer]()
 
