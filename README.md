@@ -52,14 +52,11 @@ What is the color of the sky?
 
 Parts of this question are named like this:
 
-* **Question stem**
-  The non-choices part of the question. Example: `What is the color of the sky?`
+* **Question stem**: The non-choices part of the question. Example: `What is the color of the sky?`
    
-* **Answer key**
-  The correct answer's choice label. Example: `A`
+* **Answer key**: The correct answer's choice label. Example: `A`
   
-* **Choice**
-  One of the possible answers, consisting of a **choice label** (e.g., `A`) and **choice text** (e.g., `blue`).
+* **Choice**: One of the possible answers, consisting of a **choice label** (e.g., `A`) and **choice text** (e.g., `blue`).
   
 These are represented with code in [the model/ directory](common/src/main/scala/org/allenai/aristomini/model/).
 
