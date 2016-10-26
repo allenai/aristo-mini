@@ -104,7 +104,7 @@ See [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/
 
 #### Writing your own solver
 
-Your solver has to be an HTTP server that responds to the `GET /solver-info` and `POST /answer` APIs. The `POST /answer` API has to consume a JSON-formatted question document and must produce a JSON-formatted response document with the answer. You can start reading at [SolverBase.scala](common/src/main/scala/org/allenai/aristomini/solver/SolverBase.scala) (which is extened by the provided solvers) to understand the input and output document structures.
+Your solver has to be an HTTP server that responds to the `GET /solver-info` and `POST /answer` APIs. The `POST /answer` API has to consume a JSON-formatted question document and must produce a JSON-formatted response document with the answer. You can start reading at [SolverBase.scala](common/src/main/scala/org/allenai/aristomini/solver/SolverBase.scala) (which is extended by the provided solvers) to understand the input and output document structures.
 
 **Network location:** By default, the evaluation UI will use a solver running on `localhost:8000`. This is defined in [Evaluator.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluator.scala) which you can change to another location if your solver runs on a different host or on a different port.
 
