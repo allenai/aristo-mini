@@ -6,14 +6,14 @@ This solver uses an Elasticsearch index to score the choices in multiple choice 
 
 When given a question like this:
 
-```
+```json
 {
   "stem" : "What color is the sky?",
-  "choices" : {
-     "A" : "red",
-     "B" : "green",
-     "C" : "blue"
-  }
+  "choices" : [
+     { "label" : "A", "text" : "red" },
+     { "label" : "B", "text" : "green" },
+     { "label" : "C", "text" : "blue" }
+  ]
 }
 ```
 
