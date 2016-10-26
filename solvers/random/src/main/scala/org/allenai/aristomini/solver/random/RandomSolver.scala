@@ -6,7 +6,7 @@ import org.allenai.aristomini.solver.SolverBase
 /** An random guess solver. */
 object RandomSolver extends SolverBase {
 
-  override def solverInfo: String = "RandomGuesser: Random guess. Every time."
+  override def solverInfo: String = "RandomGuesser"
 
   /** Choose random confidences for each of the available choices.
     * @param question the MultipleChoiceQuestion instance.

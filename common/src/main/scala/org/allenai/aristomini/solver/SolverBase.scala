@@ -19,8 +19,11 @@ trait SolverBase {
   @POST
   @Path("/answer")
   @Timed
-  def answer(question: MultipleChoiceQuestion): MultipleChoiceAnswer = {
-    answerQuestion(question)
+  def answer(question: MultipleChoiceQuestion): SolverAnswer = {
+    SolverAnswer(
+      solverInfo = solverInfo,
+      multipleChoiceAnswer = answerQuestion(question)
+    )
   }
 
   @GET

@@ -1,6 +1,7 @@
 package org.allenai.aristomini.evaluate
 
 import org.allenai.aristomini.model._
+import org.allenai.aristomini.solver.SolverAnswer
 
 import java.util.concurrent.Executors
 import scala.collection.mutable
@@ -25,8 +26,12 @@ class Evaluation(exam: ExamMultipleChoice) {
 
   // Answered provided by the solver, keyed on the question position in examQuestions. Initially
   // empty.
-  private val solverAnswers: mutable.Map[Integer, MultipleChoiceAnswer] =
-    scala.collection.mutable.Map[Integer, MultipleChoiceAnswer]()
+  private val solverAnswers: mutable.Map[Integer, SolverAnswer] =
+    scala.collection.mutable.Map[Integer, SolverAnswer]()
+
+  private val startTimeMillis: Long = System.currentTimeMillis()
+  private var lastAnswerMillis: Long = 0
+  private var queued: Int = 0
 
   // Start the evaluation immediately.
   start()
@@ -37,10 +42,20 @@ class Evaluation(exam: ExamMultipleChoice) {
       case (examQuestion: ExamQuestion, questionNumber: Int) =>
         // enqueue work to solve this question
         Future {
-          val answerMC = Evaluator.solveOneQuestion(examQuestion.question)
-          // update solverAnswers in a thread-safe way
-          solverAnswers.synchronized {
-            solverAnswers.update(questionNumber, answerMC)
+          this.synchronized {
+            queued += 1
+          }
+          try {
+            val solverAnswer = Evaluator.solveOneQuestion(examQuestion.question)
+            // update state in a thread-safe way
+            this.synchronized {
+              solverAnswers.update(questionNumber, solverAnswer)
+              lastAnswerMillis = System.currentTimeMillis()
+            }
+          } finally {
+            this.synchronized {
+              queued -= 1
+            }
           }
         }
     }
@@ -54,20 +69,30 @@ class Evaluation(exam: ExamMultipleChoice) {
   /** The current progress of this evaluation.
     * @return an EvaluationProgress instance
     */
-  def progress: EvaluationProgress = EvaluationProgress(solverAnswers.size, examQuestions.size)
+  def progress: EvaluationProgress = EvaluationProgress(
+    solverAnswers.size,
+    examQuestions.size,
+    startTimeMillis,
+    lastAnswerMillis,
+    queued
+  )
 
-  /** Calculate a score for answers submitted so far. This assumed every question is worth one
+  /** Calculate a score for answers submitted so far. This assumes every question is worth one
     * single point.
-    * @return a score from 0 to 1
+    * @return an EvaluationScore
     */
-  def score: Double = {
+  def score: EvaluationScore = {
     var correct = 0
+    var answered = 0
 
     examQuestions.zipWithIndex.foreach {
       case (examQuestion: ExamQuestion, questionNumber: Int) => {
-        val answerOpt = answerForQuestion(questionNumber)
+        val answerOpt = solverAnswerForQuestion(questionNumber)
         if (answerOpt.nonEmpty) {
-          val (_, isCorrect) = examQuestion.candidateAnswerIsCorrect(answerOpt.get)
+          answered += 1
+          val (_, isCorrect) = examQuestion.candidateAnswerIsCorrect(
+            answerOpt.get.multipleChoiceAnswer
+          )
           if (isCorrect) {
             correct += 1
           }
@@ -75,14 +100,14 @@ class Evaluation(exam: ExamMultipleChoice) {
       }
     }
 
-    100 * correct / exam.numQuestions
+    EvaluationScore(correct, answered)
   }
 
   /** The answer for a given question.
     * @param questionNumber the question number ot look up
     * @return an optional answer, None if it hasn't been answered yet.
     */
-  def answerForQuestion(questionNumber: Integer): Option[MultipleChoiceAnswer] = {
+  def solverAnswerForQuestion(questionNumber: Integer): Option[SolverAnswer] = {
     solverAnswers.get(questionNumber)
   }
 
