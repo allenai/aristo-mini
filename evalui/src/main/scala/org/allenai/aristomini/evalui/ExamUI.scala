@@ -1,6 +1,6 @@
 package org.allenai.aristomini.evalui
 
-import org.allenai.aristomini.evaluate.{ Evaluation, Evaluator }
+import org.allenai.aristomini.evaluate.{ Evaluation, EvaluationProgress, Evaluator }
 import org.allenai.aristomini.exams.ExamCollection
 import org.allenai.aristomini.jackson.JacksonMapper
 import org.allenai.aristomini.model.{ ExamMultipleChoice, ExamQuestion, MultipleChoiceAnswer }
@@ -8,6 +8,7 @@ import org.allenai.aristomini.model.{ ExamMultipleChoice, ExamQuestion, Multiple
 import com.codahale.metrics.annotation.Timed
 
 import java.net.URI
+import java.text.SimpleDateFormat
 import javax.ws.rs._
 import javax.ws.rs.core.Response
 import scala.xml.{ Elem, NodeSeq }
@@ -54,8 +55,30 @@ object ExamUI {
     val exam = ExamCollection.exams(examId)
     val evaluation = Evaluator.evaluationForExam(examId)
 
+    val shouldRefreshPage = evaluation.progress.workRemains
+
+    val headSupplement : NodeSeq =
+      if (shouldRefreshPage) {
+        val refreshIntervalInSeconds = "1"
+        <meta http-equiv="refresh" content={refreshIntervalInSeconds}/>
+      }
+      else {
+        NodeSeq.Empty
+      }
+
+    val refreshNotice: NodeSeq =
+      if (shouldRefreshPage) {
+        <p>
+          Page will refresh automatically until the evaluation is finished. Or you
+          can <a href="?restart=true">abort and restart.</a>
+        </p>
+      }
+      else {
+        NodeSeq.Empty
+      }
+
     Common.pageWrapper(
-      headSupplement = htmlHeader(evaluation),
+      headSupplement = headSupplement,
       content =
           <div>
             <h1>Exam:
@@ -64,13 +87,20 @@ object ExamUI {
 
             <h2>Evaluation progress</h2>
             <span>
-              {describeEvaluation(evaluation)}
+              {describeProgress(evaluation.progress)}
+
+              {refreshNotice}
             </span>
 
             <h2>Results</h2>
             <p>Score:
               <b>
-                {f"${evaluation.score}%.0f%%"}
+                {evaluation.score.correct}
+                correct /
+                {evaluation.score.answered}
+                answered =
+                {f"${evaluation.score.percentCorrect}%.0f%%"}
+                correct.
               </b>
             </p>{questionTable(exam, evaluation)}
           </div>
@@ -85,27 +115,39 @@ object ExamUI {
   private def questionTable(exam: ExamMultipleChoice, evaluation: Evaluation): Elem = {
     <table border="1">
       <tr>
-        <th>Answer</th> <th>Key</th> <th>Question</th>
+        <th>Question</th> <th>Key</th> <th>Answer</th> <th>Solver</th>
       </tr>{exam.questions.zipWithIndex.map {
       case (examQuestion: ExamQuestion, questionNumber: Int) => {
-        val answerOpt = evaluation.answerForQuestion(questionNumber)
+        val answerOpt = evaluation.solverAnswerForQuestion(questionNumber)
+
         val solverAnswer =
           if (answerOpt.isEmpty) {
             <span>pending</span>
           }
           else {
-            describeAnswer(examQuestion, answerOpt.get)
+            describeAnswer(examQuestion, answerOpt.get.multipleChoiceAnswer)
+          }
+
+        val solverInfo =
+          if (answerOpt.isEmpty) {
+            <span>pending</span>
+          }
+          else {
+            <code>{answerOpt.get.solverInfo}</code>
           }
 
         <tr>
-          <td style="white-space: nowrap;">
-            {solverAnswer}
+          <td>
+            {examQuestion.question.oneLine}
           </td>
           <td>
             {examQuestion.answerKey}
           </td>
-          <td>
-            {examQuestion.question.oneLine}
+          <td style="white-space: nowrap;">
+            {solverAnswer}
+          </td>
+          <td style="white-space: nowrap;">
+            {solverInfo}
           </td>
         </tr>
       }
@@ -114,57 +156,42 @@ object ExamUI {
   }
 
   /** Describe progress of an evaluation.
-    * @param evaluation the evaluation to describe
+    * @param progress the EvaluationProgress to describe
     * @return a description
     */
-  private def describeEvaluation(evaluation: Evaluation): Elem = {
-    val progress = evaluation.progress
-    if (progress.finished) {
+  private def describeProgress(progress: EvaluationProgress): Elem = {
+    val progressDescription =
       <span>
-        Evaluation finished.
-        <a href="?restart=true">Go again.</a>
+        Evaluation started at {epochTimeToString(progress.startTimeMillis)}.
+        {progress.numSolved} / {progress.numTotal} questions done.
       </span>
+
+    if (progress.finished) {
+      <div>
+        {progressDescription}
+
+        <p>
+          Evaluation finished at {epochTimeToString(progress.lastAnswerMillis)}.
+          <a href="?restart=true">Go again.</a>
+        </p>
+
+      </div>
+    }
+    else if (progress.workRemains) {
+      <div>
+        {progressDescription}
+      </div>
     }
     else {
-      val unreachableWarning = if (!Evaluator.connectedSolverInfo.reachable) {
-        <span>
-          Evaluation cannot complete because the solver is unreachable. Start a solver and
-          restart this evaluation.
-        </span>
-      }
-      else {
-        <span></span>
-      }
-
       <div>
+        {progressDescription}
         <p>
-          Evaluation in progress.
-          {progress.numSolved}
-          /
-          {progress.numTotal}
-          questions done. Page will refresh automatically until the evaluation is finished. Or you
-          can <a href="?restart=true">abort and restart.</a>
-        </p>
-        <p>
-          {unreachableWarning}
+          No more work is queued. Maybe the solver is unreachable. Start a solver and
+          <a href="?restart=true">restart this evaluation.</a>
         </p>
       </div>
     }
   }
-
-  /** An HTML header supplement for an evaluation. In-progress evaluations cause the page
-    * to refresh.
-    * @param evaluation evaluation to look at progress.
-    * @return NodeSeq.empty or an HTML meta element that causes a refresh
-    */
-  private def htmlHeader(evaluation: Evaluation): NodeSeq =
-    if (evaluation.progress.finished) {
-      NodeSeq.Empty
-    }
-    else {
-        val refreshIntervalInSeconds = "1"
-        <meta http-equiv="refresh" content={refreshIntervalInSeconds}/>
-    }
 
   /** Describe an candidate answer for a question-answer pair.
     * @param examQuestion    the exam question
@@ -191,4 +218,12 @@ object ExamUI {
       {selectedAnswer.getOrElse("?")}{checkmark}
     </span>
   }
+
+  /** Convert an epoch time in millisconds to a human-readable string.
+    * @param millisSinceEpoch milliseconds since epoch
+    * @return a human-readable string
+    */
+  private def epochTimeToString(millisSinceEpoch : Long) : String =
+    new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(millisSinceEpoch)
+
 }

@@ -15,7 +15,7 @@ import java.net.InetSocketAddress
 /** A simple information retrieval solver based on sentences in an Elasticsearch index. */
 object TextSearchSolver extends SolverBase {
 
-  override def solverInfo: String = "TextSearchSolver: Uses a search index"
+  override def solverInfo: String = "TextSearchSolver"
 
   /** Choose a confidence for each of the available choices.
     * @param question the MultipleChoiceQuestion instance.

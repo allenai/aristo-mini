@@ -2,13 +2,14 @@ package org.allenai.aristomini.evaluate
 
 import org.allenai.aristomini.client.{ SolverClient, SolverInfo }
 import org.allenai.aristomini.exams.ExamCollection
-import org.allenai.aristomini.model.{ MultipleChoiceAnswer, MultipleChoiceQuestion }
+import org.allenai.aristomini.model.MultipleChoiceQuestion
+import org.allenai.aristomini.solver.SolverAnswer
 
 /** An evaluator that can be asked to solve one question, or evaluate an entire exam. */
 object Evaluator {
 
   // Hard-coded connection
-  private val solverClient = SolverClient.localhost8000
+  private val solverClient = new SolverClient("localhost", 8000)
 
   // Previously attempted evaluations
   private val evaluations = scala.collection.mutable.Map[Int, Evaluation]()
@@ -20,7 +21,7 @@ object Evaluator {
     solverClient.solverInfo()
 
   /** Solve one question and return a the answer. This blocking on the answer to arrive. */
-  def solveOneQuestion(multipleChoiceQuestion: MultipleChoiceQuestion): MultipleChoiceAnswer =
+  def solveOneQuestion(multipleChoiceQuestion: MultipleChoiceQuestion): SolverAnswer =
     solverClient.answer(multipleChoiceQuestion)
 
   /** Retrieve the evaluation for the specified exam, or start a new one.

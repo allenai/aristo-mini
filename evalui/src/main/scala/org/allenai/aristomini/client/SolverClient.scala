@@ -1,7 +1,8 @@
 package org.allenai.aristomini.client
 
 import org.allenai.aristomini.jackson.JacksonMapper
-import org.allenai.aristomini.model.{ MultipleChoiceAnswer, MultipleChoiceQuestion }
+import org.allenai.aristomini.model.MultipleChoiceQuestion
+import org.allenai.aristomini.solver.SolverAnswer
 
 import java.net.{ ConnectException, URI }
 
@@ -25,19 +26,14 @@ class SolverClient(hostname: String, port: Int) {
 
   /** Answer a Non-Diagram Multiple Choice question using this solver.
     * @param multipleChoiceQuestion the question to ask
-    * @return an instance of AnswerMC
+    * @return an instance of SolverAnswer
     */
-  def answer(multipleChoiceQuestion: MultipleChoiceQuestion): MultipleChoiceAnswer = {
+  def answer(multipleChoiceQuestion: MultipleChoiceQuestion): SolverAnswer = {
     val responseString = SimpleHttpClient.postJson(
       answerUri,
       JacksonMapper.default.writeValueAsString(multipleChoiceQuestion)
     )
 
-    JacksonMapper.default.readValue(responseString, classOf[MultipleChoiceAnswer])
+    JacksonMapper.default.readValue(responseString, classOf[SolverAnswer])
   }
-}
-
-object SolverClient {
-  /** A locally started solver. */
-  val localhost8000 = new SolverClient("localhost", 8000)
 }
