@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 
 class ExamQuestionSpec  extends FunSuite {
   val dummyExamQuestion = ExamQuestion(
-    id = "foo bar 123",
+    id = "foobar123",
     question = MultipleChoiceQuestion(stem = "What is?", choices = Seq()),
     answerKey = "A"
   )
