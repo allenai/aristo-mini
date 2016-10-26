@@ -98,9 +98,17 @@ To answer a question you can POST to `/answer`. To try it on the command line:
 {"solverInfo":"RandomGuesser","multipleChoiceAnswer":{"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.3980842820846223},{"choice":{"label":"B","text":"green"},"confidence":0.9849165494603028},{"choice":{"label":"C","text":"blue"},"confidence":0.1356729244074497}]}}
    ```
 
-#### Simple solver
+#### Text search solver
 
-See the documentation in [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md).
+See [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md) for setup and running instructions.
+
+#### Writing your own solver
+
+Your solver has to be an HTTP server that responds to the `GET /solver-info` and `POST /answer` APIs. The `POST /answer` API has to consume a JSON-formatted question document and must produce a JSON-formatted response document with the answer. You can start reading at [SolverBase.scala](common/src/main/scala/org/allenai/aristomini/solver/SolverBase.scala) (which is extened by the provided solvers) to understand the input and output document structures.
+
+**Network location:** By default, the evaluation UI will use a solver running on `localhost:8000`. This is defined in [Evaluator.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluator.scala) which you can change to another location if your solver runs on a different host or on a different port.
+
+**Concurrency:** Solvers will be sent a fixed number of questions at time. At the time of writing, this is 10 concurrent requests. This is configured with the thread pool size in [Evaluation.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluation.scala).
 
 ## The evaluation UI
 
