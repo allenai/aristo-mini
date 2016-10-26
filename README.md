@@ -143,6 +143,7 @@ AI2 provides more questions at http://allenai.org/data.html
 
 Please tell us what you think!
 
-* If you have a question or suggestion for a change, please file [an issue](https://github.com/allenai/aristo-mini/issues/new?labels=question).
+* If you have a question or suggestion for a change,
+take look at [existing issues](https://github.com/allenai/aristo-mini/issues) or [file a new issue](https://github.com/allenai/aristo-mini/issues/new?labels=question).
 
 * If you'd like to propose a change to this code, please submit a pull request.
