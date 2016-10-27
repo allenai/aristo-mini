@@ -37,27 +37,36 @@ To use the Text Search Solver, you need to populate a local Elasticsearch index 
 
 ### Set up a local Elasticsearch server
 
-Download ElasticSearch and run the server locally with out-of-the-box defaults.
+Download [Elasticsearch 2.4.1](https://www.elastic.co/downloads/past-releases/elasticsearch-2-4-1) and run the server locally with out-of-the-box defaults.
 
-For instructions, see the [Elasticsearsch website](https://www.elastic.co/downloads/elasticsearch).
+At time of writing, this can be done as follows:
+
+```
+wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.4.1/elasticsearch-2.4.1.zip
+unzip elasticsearch-2.4.1.zip
+cd elasticsearch-2.4.1
+bin/elasticsearch
+```
 
 ### Populate your Elasticsearch server with interesting sentences
 
-1. Download the plain text version of the book [All About Animals](https://openlibrary.org/books/OL25099049M/All_about_animals) into a file `allaboutanimals_raw.txt`.
+This solver includes a Python 2.x script that will insert sentences
+from text files into a locally running Elasticsearch solver. To use it:
 
-2. Parse the raw text into sentences, one per line, without numbers or punctuation:
-   ```
-   cat allaboutanimals_raw.txt | tr -cd 'a-zA-Z. ' | tr '.' '\n' > allaboutanimals_sentences.txt
-   ```
+1. Obtain a text file. For example, the plain text version of the book [All
+About Animals](https://openlibrary.org/books/OL25099049M/All_about_animals) is
+freely available. Save it into a file like `/tmp/allaboutanimals.txt`.
 
-3. Produce bulk `index` commands in JSONL format for Elasticsearch:
+2. Use the `insert-text-to-elasticsearch.py` script to operate on `/tmp/allaboutanimals.txt`:
+   ```bash
+   sbt stage
+   cd solvers/textsearch/target/universal/stage
+   cat /tmp/allaboutanimals.txt | bin/insert-text-to-elasticsearch.py
    ```
-   cat allaboutanimals_sentences.txt | awk '{print "{\"index\":{\"_id\":\"" NR "\"}}"; print "{\"body\":\"" $0 "\"}"}' > allaboutanimals_bulk.jsonl
+   
+3. Watch insertion progress:
    ```
-
-4. Issue the generated `index` commands to your previously started Elasticsearch server, in the index name `knowledge`:
-   ```
-   curl -s -XPOST localhost:9200/knowledge/sentence/_bulk --data-binary "@allaboutanimals_bulk.jsonl"; echo
+   Posted 7182 documents (570154 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
    ```
 
 ### Start the solver server
