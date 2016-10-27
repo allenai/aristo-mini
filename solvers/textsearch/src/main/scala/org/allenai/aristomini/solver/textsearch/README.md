@@ -43,7 +43,7 @@ For instructions, see the [Elasticsearsch website](https://www.elastic.co/downlo
 
 ### Populate your Elasticsearch server with interesting sentences
 
-1. Download the raw text version of the book [All About Animals](https://archive.org/details/allaboutanimalsf00newy) into a file `allaboutanimals_raw.txt`.
+1. Download the plain text version of the book [All About Animals](https://openlibrary.org/books/OL25099049M/All_about_animals) into a file `allaboutanimals_raw.txt`.
 
 2. Parse the raw text into sentences, one per line, without numbers or punctuation:
    ```
