@@ -9,8 +9,9 @@ import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.{ SearchHit, SearchHits }
+import org.elasticsearch.transport.client.PreBuiltTransportClient
 
-import java.net.InetSocketAddress
+import java.net.InetAddress
 
 /** A simple information retrieval solver based on sentences in an Elasticsearch index. */
 object TextSearchSolver extends SolverBase {
@@ -79,12 +80,11 @@ object TextSearchSolver extends SolverBase {
     * @return an instance of TransportClient
     */
   private def makeEsClient(host: String, port: Int, clusterName: String): TransportClient = {
-    val address = new InetSocketAddress(host, port)
+    val transportAddress = new InetSocketTransportAddress(InetAddress.getByName(host), port)
     val clientSettings = Settings.builder()
         .put("cluster.name", clusterName)
         .build()
-    TransportClient.builder().settings(clientSettings).build()
-        .addTransportAddress(new InetSocketTransportAddress(address))
+    new PreBuiltTransportClient(clientSettings).addTransportAddress(transportAddress)
   }
 
 }

@@ -51,7 +51,10 @@ lazy val textsearch = Project(
   settings = sharedSettings ++ Seq(
     name := "solver-textsearch",
     version := "1.0",
-    libraryDependencies := Seq("org.elasticsearch" % "elasticsearch" % "2.3.3"),
+    libraryDependencies := Seq(
+      "org.elasticsearch.client" % "transport" % "5.0.0",
+      "org.apache.logging.log4j" % "log4j-api" % "2.7"
+    ),
     mainClass in Compile := Some("org.allenai.aristomini.solver.textsearch.TextSearchSolverServer"),
     bashScriptExtraDefines += """addApp "server"""",
     bashScriptExtraDefines += """addApp "conf/solver-server.yaml""""
