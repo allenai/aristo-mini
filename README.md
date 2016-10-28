@@ -16,9 +16,7 @@ Aristo mini
 
 # Overview
 
-Aristo mini is a light-weight implementation of AI2's question answering system, [Aristo](http://allenai.org/aristo/).
-
-Using Aristo mini you can quickly evaluate Aristo science questions with an evaluation web server and baseline solvers. You can also extend the provided solvers with your own implementation.
+Aristo mini is a light-weight question answering system that can quickly evaluate [Aristo](http://allenai.org/aristo/) science questions with an evaluation web server and the provided baseline solvers. You can also extend the provided solvers with your own implementation to try out new approaches and compare results.
 
 # Quick-start guide
 
