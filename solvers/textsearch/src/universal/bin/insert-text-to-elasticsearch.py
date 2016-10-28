@@ -26,7 +26,7 @@ def bulk_load_elasticsearch(sentences, url):
   print "Posted %d documents (%d bytes) to %s. Elasticsearch errors = %s" % (
     len(sentences),
     len(payload),
-    ELASTIC_SEARCH_URL,
+    url,
     str(response.get("errors", "?"))
   )
 
