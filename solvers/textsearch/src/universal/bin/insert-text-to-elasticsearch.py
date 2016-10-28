@@ -12,16 +12,16 @@ import urllib
 ELASTIC_SEARCH_URL = 'http://localhost:9200/knowledge/sentence/_bulk'
 DOCUMENTS_PER_POST = 100000
 
-def make_payload_from_sentences(sentences):
+def sentences_to_elasticsearch_payload(sentences):
   payload_lines = []
   for sentence in sentences:
     payload_lines += [ json.dumps({"index":{}}) ]
     payload_lines += [ json.dumps({"body":sentence}) ]
   return "\n".join(payload_lines)
 
-def bulk_load_elasticsearch(sentences):
-  payload = make_payload_from_sentences(sentences)
-  response_file = urllib.urlopen(ELASTIC_SEARCH_URL, payload)
+def bulk_load_elasticsearch(sentences, url):
+  payload = sentences_to_elasticsearch_payload(sentences)
+  response_file = urllib.urlopen(url, payload)
   response = json.loads(response_file.read())
   print "Posted %d documents (%d bytes) to %s. Elasticsearch errors = %s" % (
     len(sentences),
@@ -30,25 +30,32 @@ def bulk_load_elasticsearch(sentences):
     str(response.get("errors", "?"))
   )
 
+def lines_to_sentences(line_stream):
+  for line in line_stream:
+    line_cleaned = re.sub(r'([^a-zA-Z0-9\.])', " ", line).strip()
+    for sentence in line_cleaned.split("."):
+      if len(sentence) == 0:
+        continue
+      yield sentence
+
+def groups(stream, size):
+  batch = []
+  for item in stream:
+    batch += [item]
+    if len(batch) % size == 0:
+      yield batch
+      batch = []
+  if len(batch) > 0:
+    yield batch
+
 def main():
-    line_count = 0
-    sentence_count = 0
-    sentences = []
-    for line in sys.stdin:
-      line_count += 1
-      line_cleaned = re.sub(r'([^a-zA-Z0-9\.])', " ", line).strip()
-      for sentence in line_cleaned.split("."):
-        if len(sentence) == 0:
-          continue
-        sentence_count += 1
-        sentences += [sentence]
-        if len(sentences) % DOCUMENTS_PER_POST == 0:
-          bulk_load_elasticsearch(sentences)
-          sentences = []
-    
-    bulk_load_elasticsearch(sentences)
-    print "Lines read: ", line_count
-    print "Sentences posted: ", sentence_count
+  sentence_count = 0
+
+  for sentences in groups(lines_to_sentences(sys.stdin), DOCUMENTS_PER_POST):
+    bulk_load_elasticsearch(sentences, ELASTIC_SEARCH_URL)
+    sentence_count += len(sentences)
+
+  print "Documents posted:", sentence_count
 
 if __name__ == "__main__":
-    main()
+  main()
