@@ -80,6 +80,8 @@ These are represented with code in [the model/ directory](common/src/main/scala/
 
 ## Available solvers
 
+Two solvers are included in this distribution. You can run on solver at a time for the Evaluation UI to use.
+
 ### Random
 
 This solver answers questions randomly. It illustrates the question-answer interface for a solver.
