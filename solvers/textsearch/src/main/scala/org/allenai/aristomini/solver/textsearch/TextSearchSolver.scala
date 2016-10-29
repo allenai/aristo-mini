@@ -58,7 +58,6 @@ object TextSearchSolver extends SolverBase {
     // submit the query and get the results
     val searchHits: SearchHits = esClient
         .prepareSearch(indexName)
-        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
         .setQuery(QueryBuilders.matchQuery(fieldName, queryText))
         .setSize(topN)
         .get.getHits
