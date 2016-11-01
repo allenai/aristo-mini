@@ -13,6 +13,7 @@ Aristo mini
    * [The evaluation UI](#the-evaluation-ui)
    * [Question sets](#question-sets)
    * [Feedback](#feedback)
+   * [History](#history)
 
 # Overview
 
@@ -147,3 +148,7 @@ Please tell us what you think!
 take look at [existing issues](https://github.com/allenai/aristo-mini/issues) or [file a new issue](https://github.com/allenai/aristo-mini/issues/new?labels=question).
 
 * If you'd like to propose a change to this code, please submit a pull request.
+
+# History
+
+* November, 2016: Initial public release, version 1.
