@@ -79,25 +79,39 @@ curl -XPUT 'http://localhost:9200/knowledge' -d '
 
 ### Populate your Elasticsearch server with interesting sentences
 
-This solver includes a Python 2.x script that will insert sentences
-from text files into a locally running Elasticsearch solver. To use it:
+This solver includes a Python 2.x script ([insert-text-to-elasticsearch.py](solvers/textsearch/src/universal/bin/insert-text-to-elasticsearch.py)) that will insert sentences from text files into a locally running Elasticsearch solver. To use it
+you'll need to obtain a text file with sentences and use this script.
 
-1. Obtain a text file. For example, the plain text version of the book [All
-About Animals](https://openlibrary.org/books/OL25099049M/All_about_animals) is
-freely available. Save it into a file like `/tmp/allaboutanimals.txt`.
+#### Obtain a text file
 
-2. Use the `insert-text-to-elasticsearch.py` script to operate on `/tmp/allaboutanimals.txt`:
+As an illustration of a corpus relevant to the questions that the Aristo project focuses on, we have gathered 1197377 lines of text that are loosely associated with grade school level science and loosely use grade school level terminology. The text was drawn from Simple Wiki (~1.1M lines), Simple Wiktionary (~32k lines), and the Web (~50k lines), filtered by terminology and/or subject tags (for Simple Wiki pages). These lines of text are in a single file [aristo-mini-corpus-v1.txt.gz](https://s3-us-west-2.amazonaws.com/aristo-public-data/aristo-mini-corpus-v1.txt.gz) (35MB compressed, 99MB uncompressed).
+
+#### Insert sentences into the Elasticsearch index
+
+Use the `insert-text-to-elasticsearch.py` script to operate on the above text file (assuming you saved it in `/tmp`):
+
    ```bash
    sbt stage
    cd solvers/textsearch/target/universal/stage
-   cat /tmp/allaboutanimals.txt | bin/insert-text-to-elasticsearch.py
+   zcat /tmp/aristo-mini-corpus-v1.txt.gz | bin/insert-text-to-elasticsearch.py
    ```
-   
-3. Watch progress and wait for the insertion program to conclude:
+
+This will begin issuing inserts to the Elasticsearch index running locally.
+
+#### Watch progress and wait for the insertion program to conclude
+
+You will see output that looks like this:
+
    ```
-   Posted 7182 documents (570154 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
-   Documents posted: 7182
+   Posted 100000 documents (11158897 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
+   Posted 100000 documents (8940144 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
+   ...
+   Posted 100000 documents (9102358 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
+   Posted 41860 documents (3790949 bytes) to http://localhost:9200/knowledge/sentence/_bulk. Elasticsearch errors = False
+   Documents posted: 1541860
    ```
+
+Note: the script `insert-text-to-elasticsearch.py` will break up lines into sentences by splitting on the `.` character. Because some lines contain multiple sentences, the number of documents inserted is greater than the number of lines in the file.
 
 ### Start the solver server
 
