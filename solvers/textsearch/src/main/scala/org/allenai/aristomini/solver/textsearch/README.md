@@ -1,6 +1,6 @@
 # Text Search Solver
 
-This solver uses an Elasticsearch index to score the choices in multiple choice questions.
+This solver uses an Elasticsearch index to score the choices in multiple choice questions. It is meant to be an example baseline [Information retrieval](https://en.wikipedia.org/wiki/Information_retrieval) solver.
 
 ## How it works
 
@@ -122,3 +122,14 @@ bin/solver-textsearch
 ```
 
 The solver will query the locally running Elasticsearch index.
+
+## Solver performance
+
+Using the above Elasticsearch settings and the `aristo-mini-corpus-v1.txt.gz` corpus, as of November 2016, here is solver's performance on the provided exams:
+
+| Exam file                               | Score                                    |
+| --------------------------------------- | ---------------------------------------- |
+| AI2-8thGr-NDMC-Feb2016-Dev.jsonl        | 27 correct / 65 answered = 41% correct   |
+| AI2-8thGr-NDMC-Feb2016-Train.jsonl      | 128 correct / 293 answered = 43% correct |
+| AI2-Elementary-NDMC-Feb2016-Dev.jsonl   | 41 correct / 84 answered = 48% correct   |
+| AI2-Elementary-NDMC-Feb2016-Train.jsonl | 196 correct / 432 answered = 45% correct |
