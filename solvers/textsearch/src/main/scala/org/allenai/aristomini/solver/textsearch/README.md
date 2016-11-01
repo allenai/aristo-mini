@@ -29,7 +29,29 @@ The Elasticsearch **score** of the first document returned is used as a confiden
 * `What color is the sky? green`  **Score: 0.1**
 * `What color is the sky? blue` **Score: 0.6**
 
-These numbers are reported directly in the response: `{"choiceConfidence":{"A":0.3,"B":0.1,"C":0.6}}`
+These numbers are reported directly in the response: 
+
+```json
+{
+   "multipleChoiceAnswer" : {
+      "choiceConfidences" : [
+         {
+            "choice" : { "label" : "A", "text" : "red" },
+            "confidence" : 0.3
+         },
+         {
+            "choice" : { "label" : "B", "text" : "green" },
+            "confidence" : 0.1
+         },
+         {
+            "choice" : { "label" : "C", "text" : "blue" },
+            "confidence" : 0.6
+         }
+      ]
+   },
+   "solverInfo" : "TextSearchSolver"
+}
+```
 
 ## Starting the Text Search Solver
 
@@ -124,6 +146,8 @@ bin/solver-textsearch
 The solver will query the locally running Elasticsearch index.
 
 ## Solver performance
+
+You can use the Evaluation UI to submit many questions to your solver at once.
 
 Using the above Elasticsearch settings and the `aristo-mini-corpus-v1.txt.gz` corpus, as of November 2016, here is solver's performance on the provided exams:
 
