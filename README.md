@@ -138,6 +138,12 @@ To run one, first install the requirements
 pip install -r requirements.txt
 ```
 
+and add the project to your PYTHONPATH
+
+```
+export PYTHONPATH=${PYTHONPATH}:`pwd`/python
+```
+
 and then start the solver with
 
 ```
