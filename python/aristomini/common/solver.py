@@ -1,0 +1,44 @@
+"""common classes for solver"""
+
+from typing import Any
+
+from aristomini.common.models import MultipleChoiceQuestion, MultipleChoiceAnswer, \
+    SolverAnswer, parse_question
+
+import simplejson as json
+from flask import Flask, request
+
+
+class SolverBase:
+    """interface for solvers"""
+    def run(self, host='localhost', port=8000):
+        """run the solver"""
+        app = Flask(__name__)
+
+        @app.route('/answer', methods=['GET', 'POST'])
+        def solve() -> Any:  # pylint: disable=unused-variable
+            """
+            get a json-serialized MultipleChoiceQuestion out of the request body, feed it to
+            answer_question, and return the json-serialized result
+            """
+            body = request.get_json(force=True)
+            question = parse_question(body)
+            multiple_choice_answer = self.answer_question(question)
+            solver_answer = SolverAnswer(solverInfo=self.solver_info(),
+                                         multipleChoiceAnswer=multiple_choice_answer)
+            return json.dumps(solver_answer)
+
+        @app.route('/solver-info')
+        def info():  # pylint: disable=unused-variable
+            """return the solver name"""
+            return self.solver_info()
+
+        app.run(host=host, port=port)
+
+    def answer_question(self, question: MultipleChoiceQuestion) -> MultipleChoiceAnswer:
+        """answer the question"""
+        raise NotImplementedError()
+
+    def solver_info(self) -> str:
+        """info about the solver"""
+        raise NotImplementedError()
