@@ -124,6 +124,29 @@ Your solver has to be an HTTP server that responds to the `GET /solver-info` and
 
 **Concurrency:** Solvers will be sent a fixed number of questions at time. At the time of writing, this is 10 concurrent requests. This is configured with the thread pool size in [Evaluation.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluation.scala).
 
+## Writing a solver in Python
+
+As a solver is just a HTTP server, you can write it in any language you like. For example, you might want to use scikit-learn or keras in your solver, in which case it would make sense to write it in Python.
+
+In `python/aristomini/solvers` there are Python implementations of the Random and TextSearch solvers. These solvers are written using Python's new 
+[type hinting](https://docs.python.org/3/library/typing.html) features, which means that you need Python 3.5 or later to run them. 
+(This made them easier to write correctly but is also the author's way of encouraging you to upgrade to 3.5 if you haven't already.)
+
+To run one, first install the requirements
+
+```
+pip install -r requirements.txt
+```
+
+and then start the solver with
+
+```
+python python/aristomini/solvers/random.py
+```
+
+To implement your own, simply inherit from `SolverBase`, override the `solver_info` and `answer_question` methods, and call `.run()`.
+
+
 # The evaluation UI
 
 Once started (see above) you can go to [http://localhost:9000/](http://localhost:9000/) and click around.
