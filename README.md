@@ -7,9 +7,11 @@ Aristo mini
    * [Terminology](#terminology)
    * [Solvers](#solvers)
       * [Available solvers](#available-solvers)
-         * [Random](#random)
-         * [Text search solver](#text-search-solver)
-         * [Writing your own solver](#writing-your-own-solver)
+         * [Random solver in Scala](#random-solver-in-scala)
+         * [Text search solver in Python](#text-search-solver-in-python)
+      * [Writing your own solver](#writing-your-own-solver)
+         * [Writing a solver in Scala](#writing-a-solver-in-scala)
+         * [Writing a solver in Python](#writing-a-solver-in-python)
    * [The evaluation UI](#the-evaluation-ui)
    * [Question sets](#question-sets)
    * [Feedback](#feedback)
@@ -158,7 +160,7 @@ Since a solver is just a HTTP server, you can write it in any language you like.
 
 The easiest way to make a new solver in Scala is to copy the Random solver by copying it to a new directory and renaming the Scala classes and packages.
 
-## Writing a solver in Python
+### Writing a solver in Python
 
 The directory `python/aristomini/solvers` contains Python implementations of the Random and TextSearch solvers. These solvers are written using Python's [type hinting](https://docs.python.org/3/library/typing.html) features, which means that you need Python 3.5 or later to run them. (This made them easier to write correctly but is also the author's way of encouraging you to upgrade to 3.5 if you haven't already.)
 
