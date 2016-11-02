@@ -8,7 +8,11 @@ from aristomini.common.models import MultipleChoiceQuestion, MultipleChoiceAnswe
 
 
 class TextSearchSolver(SolverBase):
-    """runs a query against elasticsearch and sums up the scores"""
+    """
+    runs a query against elasticsearch and sums up the top `topn` scores. by default,
+    `topn` is 1, which means it just returns the top score, which is the same behavior as the
+    scala solver
+    """
     def __init__(self,                   # pylint: disable=too-many-arguments
                  host: str="localhost",
                  port: int=9200,
