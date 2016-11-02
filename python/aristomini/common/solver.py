@@ -1,16 +1,20 @@
-"""common classes for solver"""
+"""base class that solvers should inherit from"""
 
 from typing import Any
 
 from aristomini.common.models import MultipleChoiceQuestion, MultipleChoiceAnswer, \
     SolverAnswer, parse_question
 
+# built in `json` module doesn't serialize namedtuples correctly; `simplejson` does.
 import simplejson as json
 from flask import Flask, request
 
 
 class SolverBase:
-    """interface for solvers"""
+    """
+    interface for solvers. to implement one just inherit from this class and override
+    `answer_question` and `solver_info`
+    """
     def run(self, host='localhost', port=8000):
         """run the solver"""
         app = Flask(__name__)

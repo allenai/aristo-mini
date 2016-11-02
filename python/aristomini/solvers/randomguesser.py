@@ -12,7 +12,6 @@ class RandomGuesserSolver(SolverBase):
         return "random_guesser"
 
     def answer_question(self, question: MultipleChoiceQuestion) -> MultipleChoiceAnswer:
-        """answer the question at random"""
         return MultipleChoiceAnswer(
             [ChoiceConfidence(choice, random.random()) for choice in question.choices]
         )

@@ -8,7 +8,7 @@ from aristomini.common.models import MultipleChoiceQuestion, MultipleChoiceAnswe
 
 
 class TextSearchSolver(SolverBase):
-    """guesses at random"""
+    """runs a query against elasticsearch and sums up the scores"""
     def __init__(self,                   # pylint: disable=too-many-arguments
                  host: str="localhost",
                  port: int=9200,
@@ -33,7 +33,6 @@ class TextSearchSolver(SolverBase):
         return "text_search"
 
     def answer_question(self, question: MultipleChoiceQuestion) -> MultipleChoiceAnswer:
-        """answer the question"""
         return MultipleChoiceAnswer(
             [ChoiceConfidence(choice, self.score(question.stem, choice.text))
              for choice in question.choices]

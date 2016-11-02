@@ -24,7 +24,7 @@ MultipleChoiceQuestion = NamedTuple("MultipleChoiceQuestion",
 
 
 def parse_question(blob: Dict[str, Any]) -> MultipleChoiceQuestion:
-    """parse a question from a json blob"""
+    """parses a question from a json blob. is possibly too lenient to malformed json"""
     return MultipleChoiceQuestion(
         stem=blob.get("stem", ""),
         choices=[Choice(c["label"], c["text"]) for c in blob.get("choices", [])]
