@@ -1,9 +1,16 @@
 #!/usr/bin/env python
+from __future__ import print_function
 
 import json
 import re
 import sys
-import urllib
+
+try:
+  # for Python 3.0 and later
+  from urllib.request import urlopen
+except ImportError:
+  # fallback to Python 2
+  from urllib2 import urlopen
 
 # Reads text input on STDIN, splits it into sentences, gathers groups of
 # sentences and issues bulk insert commands to an Elasticsearch server running
@@ -21,14 +28,14 @@ def sentences_to_elasticsearch_payload(sentences):
 
 def bulk_load_elasticsearch(sentences, url):
   payload = sentences_to_elasticsearch_payload(sentences)
-  response_file = urllib.urlopen(url, payload)
-  response = json.loads(response_file.read())
-  print "Posted %d documents (%d bytes) to %s. Elasticsearch errors = %s" % (
+  response_file = urlopen(url, payload.encode('utf8'))
+  response = json.loads(response_file.read().decode('utf8'))
+  print("Posted {0} documents ({1} bytes) to {2}. Elasticsearch errors = {3}".format(
     len(sentences),
     len(payload),
     url,
     str(response.get("errors", "?"))
-  )
+  ))
 
 def lines_to_sentences(line_stream):
   for line in line_stream:
@@ -55,7 +62,7 @@ def main():
     bulk_load_elasticsearch(sentences, ELASTIC_SEARCH_URL)
     sentence_count += len(sentences)
 
-  print "Documents posted:", sentence_count
+  print("Documents posted:", sentence_count)
 
 if __name__ == "__main__":
   main()
