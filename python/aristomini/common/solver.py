@@ -15,7 +15,7 @@ class SolverBase:
     interface for solvers. to implement one just inherit from this class and override
     `answer_question` and `solver_info`
     """
-    def run(self, host='localhost', port=8000):
+    def run(self, host='localhost', port=8000) -> None:
         """run the solver"""
         app = Flask(__name__)
 
