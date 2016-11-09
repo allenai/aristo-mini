@@ -106,7 +106,7 @@ you'll need to obtain a text file with sentences and use this script.
 
 #### Obtain a text file
 
-As an illustration of a corpus relevant to the questions that the Aristo project focuses on, we have gathered 1197377 lines of text that are loosely associated with grade school level science and loosely use grade school level terminology. The text was drawn from Simple Wiki (~1.1M lines), Simple Wiktionary (~32k lines), and the Web (~50k lines), filtered by terminology and/or subject tags (for Simple Wiki pages). These lines of text are in a single file [aristo-mini-corpus-v1.txt.gz](https://s3-us-west-2.amazonaws.com/aristo-public-data/aristo-mini-corpus-v1.txt.gz) (35MB compressed, 99MB uncompressed).
+As an illustration of a corpus relevant to the questions that the Aristo project focuses on, we have gathered 1197377 lines of text that are loosely associated with grade school level science and loosely use grade school level terminology. The text was drawn from Simple Wiki (~1.1M lines), Simple Wiktionary (~32k lines), and the Web (~50k lines), filtered by terminology and/or subject tags (for Simple Wiki pages). These lines of text are in a single file [aristo-mini-corpus-v1.txt.gz](https://s3-us-west-2.amazonaws.com/aristo-public-data/aristo-mini-corpus-v1.txt.gz) (35MB compressed, 99MB uncompressed). The text in this corpus obtained from Simple Wiki is offered under the [CC BY-SA 3.0 license](https://creativecommons.org/licenses/by-sa/3.0/legalcode).
 
 #### Insert sentences into the Elasticsearch index
 
