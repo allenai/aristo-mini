@@ -115,7 +115,7 @@ Use the `insert-text-to-elasticsearch.py` script to operate on the above text fi
    ```bash
    sbt stage
    cd solvers/textsearch/target/universal/stage
-   zcat /tmp/aristo-mini-corpus-v1.txt.gz | bin/insert-text-to-elasticsearch.py
+   gzcat /tmp/aristo-mini-corpus-v1.txt.gz | bin/insert-text-to-elasticsearch.py
    ```
 
 This will begin issuing inserts to the Elasticsearch index running locally.
