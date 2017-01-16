@@ -101,7 +101,7 @@ curl -XPUT 'http://localhost:9200/knowledge' -d '
 
 ### Populate your Elasticsearch server with interesting sentences
 
-This solver includes a Python 2.x script ([insert-text-to-elasticsearch.py](solvers/textsearch/src/universal/bin/insert-text-to-elasticsearch.py)) that will insert sentences from text files into a locally running Elasticsearch solver. To use it
+This solver includes a Python 2.x script ([insert-text-to-elasticsearch.py](/solvers/textsearch/src/universal/bin/insert-text-to-elasticsearch.py) that will insert sentences from text files into a locally running Elasticsearch solver. To use it
 you'll need to obtain a text file with sentences and use this script.
 
 #### Obtain a text file
