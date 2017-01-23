@@ -7,9 +7,11 @@ Aristo mini
    * [Terminology](#terminology)
    * [Solvers](#solvers)
       * [Available solvers](#available-solvers)
-         * [Random](#random)
-         * [Text search solver](#text-search-solver)
-         * [Writing your own solver](#writing-your-own-solver)
+         * [Random solver in Scala](#random-solver-in-scala)
+         * [Text search solver in Python](#text-search-solver-in-python)
+      * [Writing your own solver](#writing-your-own-solver)
+         * [Writing a solver in Scala](#writing-a-solver-in-scala)
+         * [Writing a solver in Python](#writing-a-solver-in-python)
    * [The evaluation UI](#the-evaluation-ui)
    * [Question sets](#question-sets)
    * [Feedback](#feedback)
@@ -79,9 +81,9 @@ These are represented with code in [the model/ directory](common/src/main/scala/
 
 ## Available solvers
 
-Two solvers are included in this distribution. You can run one solver at a time for the Evaluation UI to use.
+Several solvers are included in this distribution of Aristo mini. You can run one solver at a time for the Evaluation UI to use.
 
-### Random
+### Random solver (in Scala)
 
 This solver answers questions randomly. It illustrates the question-answer interface for a solver.
 
@@ -112,17 +114,57 @@ To answer a question you can POST to `/answer`. To try it on the command line:
 {"solverInfo":"RandomGuesser","multipleChoiceAnswer":{"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.3980842820846223},{"choice":{"label":"B","text":"green"},"confidence":0.9849165494603028},{"choice":{"label":"C","text":"blue"},"confidence":0.1356729244074497}]}}
    ```
 
-### Text search solver
+### Text search solver (in Scala)
 
 See [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md) for setup and running instructions.
 
-### Writing your own solver
+### Random solver (in Python)
+
+To run the random solver written in Python:
+
+1. Install the requirements:
+```bash
+pip install -r requirements.txt
+```
+
+2. Add the project to your PYTHONPATH
+```
+export PYTHONPATH=${PYTHONPATH}:`pwd`/python
+```
+
+3. Start the solver with
+```bash
+python python/aristomini/solvers/randomguesser.py
+```
+
+### Text search solver (in Python)
+
+Follow the above steps to prepare your environment to run the random solver above, then start the Text Search Solver like this:
+
+```bash
+python python/aristomini/solvers/textsearch.py
+```
+
+## Writing your own solver
 
 Your solver has to be an HTTP server that responds to the `GET /solver-info` and `POST /answer` APIs. The `POST /answer` API has to consume a JSON-formatted question document and must produce a JSON-formatted response document with the answer. You can start reading at [SolverBase.scala](common/src/main/scala/org/allenai/aristomini/solver/SolverBase.scala) (which is extended by the provided solvers) to understand the input and output document structures.
 
 **Network location:** By default, the evaluation UI will use a solver running on `localhost:8000`. This is defined in [Evaluator.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluator.scala) which you can change to another location if your solver runs on a different host or on a different port.
 
 **Concurrency:** Solvers will be sent a fixed number of questions at time. At the time of writing, this is 10 concurrent requests. This is configured with the thread pool size in [Evaluation.scala](evalui/src/main/scala/org/allenai/aristomini/evaluate/Evaluation.scala).
+
+Since a solver is just a HTTP server, you can write it in any language you like. For example, you might want to use scikit-learn or keras in your solver, in which case it would make sense to write it in Python.
+
+### Writing a solver in Scala
+
+
+The easiest way to make a new solver in Scala is to copy the Random solver by copying it to a new directory and renaming the Scala classes and packages.
+
+### Writing a solver in Python
+
+The directory `python/aristomini/solvers` contains Python implementations of the Random and TextSearch solvers. These solvers are written using Python's [type hinting](https://docs.python.org/3/library/typing.html) features, which means that you need Python 3.5 or later to run them. (This made them easier to write correctly but is also the author's way of encouraging you to upgrade to 3.5 if you haven't already.)
+
+To implement your own solver, simply inherit from `SolverBase`, override the `solver_info` and `answer_question` methods, and call `.run()`.
 
 # The evaluation UI
 
