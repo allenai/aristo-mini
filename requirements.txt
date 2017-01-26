@@ -1,3 +1,5 @@
 simplejson
 flask
 elasticsearch_dsl
+gensim
+numpy
