@@ -41,7 +41,10 @@ def cosine_similarity(v1: np.ndarray, v2: np.ndarray) -> float:
 
 
 class WordTwoVec:
-    """a wrapper for gensim.Word2Vec with extra features we need"""
+    """
+    a wrapper for gensim.Word2Vec with added functionality to embed phrases and compute the
+    "goodness" of a question-answer pair based on embedding-vector similarity
+    """
     def __init__(self, model_file: str) -> None:
         self.model = Word2Vec.load(model_file)
 
@@ -57,9 +60,9 @@ class WordTwoVec:
             # otherwise just return a zero vector
             return np.zeros(self.model.vector_size)
 
-    def goodness(self, question_text: str, answer_text: str) -> float:
-        """how good is the answer for this question?"""
-        q_words = {word for word in tokenizer(question_text)}
-        a_words = {word for word in tokenizer(answer_text) if word not in q_words}
+    def goodness(self, question_stem: str, choice_text: str) -> float:
+        """how good is the choice for this question?"""
+        question_words = {word for word in tokenizer(question_stem)}
+        choice_words = {word for word in tokenizer(choice_text) if word not in q_words}
 
-        return cosine_similarity(self.embed(q_words), self.embed(a_words))
+        return cosine_similarity(self.embed(question_words), self.embed(choice_words))
