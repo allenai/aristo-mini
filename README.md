@@ -145,6 +145,21 @@ Follow the above steps to prepare your environment to run the random solver abov
 python python/aristomini/solvers/textsearch.py
 ```
 
+
+### Word vector similarity solver (in Python)
+
+Use the `python/aristomini/scripts/train_word2vec_model.py` script to train a Word2Vec model
+from a text file of sentences (one per line). For instance, you could use the same sentences
+as the [text search solver](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md)
+ 
+Then start the solver with the path to the word2vec model:
+
+```
+python python/aristomini/solvers/wordvectorsimilarity.py /path/to/word2vec/model
+```
+
+
+
 ## Writing your own solver
 
 Your solver has to be an HTTP server that responds to the `GET /solver-info` and `POST /answer` APIs. The `POST /answer` API has to consume a JSON-formatted question document and must produce a JSON-formatted response document with the answer. You can start reading at [SolverBase.scala](common/src/main/scala/org/allenai/aristomini/solver/SolverBase.scala) (which is extended by the provided solvers) to understand the input and output document structures.
