@@ -63,6 +63,6 @@ class WordTwoVec:
     def goodness(self, question_stem: str, choice_text: str) -> float:
         """how good is the choice for this question?"""
         question_words = {word for word in tokenizer(question_stem)}
-        choice_words = {word for word in tokenizer(choice_text) if word not in q_words}
+        choice_words = {word for word in tokenizer(choice_text) if word not in question_words}
 
         return cosine_similarity(self.embed(question_words), self.embed(choice_words))
