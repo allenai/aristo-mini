@@ -9,8 +9,12 @@ from aristomini.common.wordtwovec import tokenizer
 from gensim.models import Word2Vec
 
 parser = argparse.ArgumentParser(description="train a word2vec model")
-parser.add_argument("sentences-filename", help="file with the sentences to train on, one per line")
-parser.add_argument("output-model", help="where to save the model file")
+parser.add_argument("sentences_filename",
+                    metavar="sentences-filename",
+                    help="file with the sentences to train on, one per line")
+parser.add_argument("output_model",
+                    metavar="output-model",
+                    help="where to save the model file")
 parser.add_argument("--size", type=int, default=50, help="dimension of the embedding")
 parser.add_argument("--window", type=int, default=5, help="size of the word window")
 parser.add_argument("--min-count", type=int, default=5,
