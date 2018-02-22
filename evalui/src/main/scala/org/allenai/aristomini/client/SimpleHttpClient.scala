@@ -12,6 +12,7 @@ object SimpleHttpClient {
     * @return response as a string
     */
   def get(uri: URI): String = {
+    println(uri)
     val request = new Request.Builder()
         .url(uri.toString)
         .build()
@@ -37,7 +38,11 @@ object SimpleHttpClient {
     responseAsString(request)
   }
 
-  private val httpClient = new OkHttpClient
+  //private val httpClient = new OkHttpClient
+  private val httpClient = new OkHttpClient.Builder()
+    .readTimeout(60000, java.util.concurrent.TimeUnit.MILLISECONDS)
+    .build()
+
 
   private def responseAsString(request: Request): String = {
     httpClient.newCall(request).execute().body().string()

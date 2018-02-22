@@ -111,9 +111,26 @@ To answer a question you can POST to `/answer`. To try it on the command line:
 
 3. Look at the response:
    ```json
-{"solverInfo":"RandomGuesser","multipleChoiceAnswer":{"choiceConfidences":[{"choice":{"label":"A","text":"red"},"confidence":0.3980842820846223},{"choice":{"label":"B","text":"green"},"confidence":0.9849165494603028},{"choice":{"label":"C","text":"blue"},"confidence":0.1356729244074497}]}}
+   {
+      "multipleChoiceAnswer" : {
+         "choiceConfidences" : [
+            {
+               "choice" : { "text" : "red", "label" : "A" },
+               "confidence" : 0.398084282084622
+            },
+            {
+               "choice" : { "text" : "green", "label" : "B" },
+               "confidence" : 0.984916549460303
+            },
+            {
+               "confidence" : 0.13567292440745,
+               "choice" : { "text" : "blue", "label" : "C" }
+            }
+         ]
+      },
+      "solverInfo" : "RandomGuesser"
+   }
    ```
-
 ### Text search solver (in Scala)
 
 See [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md) for setup and running instructions.

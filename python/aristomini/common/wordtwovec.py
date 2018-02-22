@@ -46,7 +46,10 @@ class WordTwoVec:
     "goodness" of a question-answer pair based on embedding-vector similarity
     """
     def __init__(self, model_file: str) -> None:
-        self.model = Word2Vec.load(model_file)
+        if model_file.endswith(".bin"):
+            self.model = Word2Vec.load_word2vec_format(model_file, binary=True)
+        else:
+            self.model = Word2Vec.load(model_file)
 
     def embed(self, words: Iterable[str]) -> np.ndarray:
         """given a list of words, find their vector embeddings and return the vector mean"""
@@ -65,4 +68,9 @@ class WordTwoVec:
         question_words = {word for word in tokenizer(question_stem)}
         choice_words = {word for word in tokenizer(choice_text) if word not in question_words}
 
-        return cosine_similarity(self.embed(question_words), self.embed(choice_words))
+        score = cosine_similarity(self.embed(question_words), self.embed(choice_words))
+
+        if "Max is doing" in question_stem:
+            print(choice_text, score)
+
+        return score
