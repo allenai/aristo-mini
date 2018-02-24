@@ -48,7 +48,7 @@
         var answerUrl = "{{ solver_url }}/answer";
 
         function bestResponse(multipleChoiceAnswer) {
-            bestConf = 0.0;
+            bestConf = Number.NEGATIVE_INFINITY;
             bestAnswer = undefined;
 
             multipleChoiceAnswer.choiceConfidences.forEach(function(cc) {
