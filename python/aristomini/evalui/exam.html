@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Exam</title>
+    <link rel="stylesheet" href="/static/evalui.css">
+</head>
+<body>
+    <h1>Aristo-Mini</h1>
+
+    <h2>{{ solver_name }} on {{ exam.name }}</h2>
+
+    <div class="score-holder">
+        <span id="score-label">Score:</span>
+        <span id="score"></span>
+    </div>
+
+    <div class="results">
+        <table id="questions-table" border="1">
+            <tr>
+                <th>id</th>
+                <th>question</th>
+                <th>answer</th>
+                <th>solver</th>
+                <th>correct?</th>
+            </tr>
+            {% for question in exam.questions %}
+                <tr>
+                    <td id="td-{{loop.index0}}-id">{{question.id_}}</td>
+                    <td id="td-{{loop.index0}}-choices">
+                        {{question.stem}}
+                        {% for choice in question.choices %}
+                            ({{choice.label}}) {{choice.text}}
+                        {% endfor %}
+                    </td>
+                    <td id="td-{{loop.index0}}-answer">{{question.answerKey}}</td>
+                    <td id="td-{{loop.index0}}-solver"></td>
+                    <td id="td-{{loop.index0}}-correct"></td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        var exam = {{ exam }};
+        var answerUrl = "{{ solver_url }}/answer";
+
+        function bestResponse(multipleChoiceAnswer) {
+            bestConf = 0.0;
+            bestAnswer = undefined;
+
+            multipleChoiceAnswer.choiceConfidences.forEach(function(cc) {
+                confidence = cc.confidence;
+                if (confidence > bestConf) {
+                    bestConf = confidence;
+                    bestAnswer = cc.choice.label;
+                }
+            })
+
+            return bestAnswer;
+        }
+
+        var numScored = 0
+        var numCorrect = 0
+
+        exam.questions.forEach(function(question, i) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', answerUrl);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    // If you want a more impressive visualization than just
+                    // outputting the raw JSON, change this part of the code.
+                    var result = JSON.parse(xhr.responseText);
+                    var bestAnswer = bestResponse(result.multipleChoiceAnswer);
+                    var correctAnswer = question.answerKey;
+                    var correct = bestAnswer === correctAnswer;
+
+                    // Populate solver cell
+                    document.getElementById("td-" + i + "-solver").innerHTML = bestAnswer;
+                    document.getElementById("td-" + i + "-correct").innerHTML = correct ? "✔" : "✗"
+
+                    numScored += 1
+                    numCorrect += (correct ? 1 : 0)
+                    pctCorrect = (100 * numCorrect / numScored).toFixed(1) + '%';
+
+                    document.getElementById("score").innerHTML = numCorrect + " / " + numScored + " (" + pctCorrect + ")";
+                }
+            };
+            xhr.send(JSON.stringify(question));
+            })
+
+
+    </script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ from aristomini.common.models import MultipleChoiceQuestion, MultipleChoiceAnswe
 # built in `json` module doesn't serialize namedtuples correctly; `simplejson` does.
 import simplejson as json
 from flask import Flask, request
-
+from flask_cors import CORS
 
 class SolverBase:
     """
@@ -18,6 +18,7 @@ class SolverBase:
     def run(self, host='localhost', port=8000) -> None:
         """run the solver"""
         app = Flask(__name__)
+        CORS(app)
 
         @app.route('/answer', methods=['GET', 'POST'])
         def solve() -> Any:  # pylint: disable=unused-variable
