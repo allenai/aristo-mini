@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/static/evalui.css">
 </head>
 <body>
+  <div class="aristo-mini">
     <h1>Aristo-Mini</h1>
 
     <h2 class="connected-solver">Connected solver: <span id="solver-name"></span></h2>
@@ -16,6 +17,7 @@
         <li><a href="exam/{{loop.index0}}">{{ exam_name }}</a></li>
     {% endfor %}
     </ul>
+  </div>
 
     <script type="text/javascript">
         var solverInfoUrl = "{{solver_url}}/solver-info";

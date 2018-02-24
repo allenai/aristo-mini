@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/static/evalui.css">
 </head>
 <body>
+  <div class="aristo-mini">
     <h1>Aristo-Mini</h1>
 
     <h2>{{ solver_name }} on {{ exam.name }}</h2>
@@ -25,21 +26,22 @@
             </tr>
             {% for question in exam.questions %}
                 <tr>
-                    <td id="td-{{loop.index0}}-id">{{question.id_}}</td>
-                    <td id="td-{{loop.index0}}-choices">
+                    <td class="td-id" id="td-{{loop.index0}}-id">{{question.id_}}</td>
+                    <td class="td-question" id="td-{{loop.index0}}-question">
                         {{question.stem}}
                         {% for choice in question.choices %}
                             ({{choice.label}}) {{choice.text}}
                         {% endfor %}
                     </td>
-                    <td id="td-{{loop.index0}}-answer">{{question.answerKey}}</td>
-                    <td id="td-{{loop.index0}}-solver"></td>
-                    <td id="td-{{loop.index0}}-correct"></td>
+                    <td class="td-answer" id="td-{{loop.index0}}-answer">{{question.answerKey}}</td>
+                    <td class="td-solver" id="td-{{loop.index0}}-solver"></td>
+                    <td class="td-correct" id="td-{{loop.index0}}-correct"></td>
                 </tr>
             {% endfor %}
 
         </table>
     </div>
+</div>
 
     <script type="text/javascript">
         var exam = {{ exam }};
@@ -78,7 +80,16 @@
 
                     // Populate solver cell
                     document.getElementById("td-" + i + "-solver").innerHTML = bestAnswer;
-                    document.getElementById("td-" + i + "-correct").innerHTML = correct ? "✔" : "✗"
+                    var correctElement = document.getElementById("td-" + i + "-correct");
+                    if (correct) {
+                        correctElement.classList.remove("incorrect");
+                        correctElement.classList.add("correct");
+                        correctElement.innerHTML = "✔";
+                    } else {
+                        correctElement.classList.add("incorrect");
+                        correctElement.classList.remove("correct");
+                        correctElement.innerHTML = "✗";
+                    }
 
                     numScored += 1
                     numCorrect += (correct ? 1 : 0)
