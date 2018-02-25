@@ -14,7 +14,7 @@ import requests
 
 from aristomini.common.models import Exam, MultipleChoiceQuestion
 
-HOST = 'awesome-solver.com'
+HOST = 'localhost'
 SOLVER_PORT = 8000
 EVALUI_PORT = 9000
 
