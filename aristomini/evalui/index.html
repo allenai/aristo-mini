@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Evaluation Framework</title>
+    <link rel="stylesheet" href="/static/evalui.css">
+</head>
+<body>
+  <div class="aristo-mini">
+    <h1>Aristo-Mini</h1>
+
+    <h2 class="connected-solver">Connected solver: <span id="solver-name"></span></h2>
+
+    <div class="choose-an-exam">Choose an examination:</div>
+
+    <ul id="navigation">
+    {% for exam_name in exam_names %}
+        <li><a href="exam/{{loop.index0}}">{{ exam_name }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+
+    <script type="text/javascript">
+        var solverInfoUrl = "{{solver_url}}/solver-info";
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', solverInfoUrl);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                var result = xhr.responseText;
+                document.getElementById("solver-name").innerHTML = result;
+            }
+        };
+        xhr.send();
+    </script>
+</body>
+</html>

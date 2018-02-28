@@ -19,32 +19,37 @@ Aristo mini
 
 # Overview
 
-Aristo mini is a light-weight question answering system that can quickly evaluate [Aristo](http://allenai.org/aristo/) science questions with an evaluation web server and the provided baseline solvers. You can also extend the provided solvers with your own implementation to try out new approaches and compare results.
+Aristo mini is a light-weight question answering system that can quickly evaluate [Aristo](http://allenai.org/aristo/) science questions with an evaluation web server and the provided baseline solvers. You can also extend the provided solvers with your own implementations to try out new approaches and compare results.
 
 # Quick-start guide
 
-To experiment you'll need `scala 2.11` and `sbt` installed. Then follow these steps:
+To experiment you'll need `python 3.6`. We recommend you create
+a dedicated virtual environment for `aristo-mini` and its dependencies.
+Then follow these steps.
 
-1. Clone this repo and run `sbt stage`:
+1. Clone this repo:
    ```bash
    git clone git@github.com:allenai/aristo-mini.git
    cd aristo-mini
-   sbt stage
    ```
 
-2. Run the random solver in one terminal window:
+2. Install the requirements:
    ```bash
-   cd solvers/random/target/universal/stage
-   bin/solver-random
+   cd aristo-mini
+   pip install -r requirements.txt
    ```
 
-3. Run the evaluation web UI in another terminal window:
+3. Run the random solver in one terminal window:
    ```bash
-   cd evalui/target/universal/stage
-   bin/evalui
+   python aristomini/solvers/randomguesser.py
    ```
 
-4. Try the UI in your browser at [http://localhost:9000/](http://localhost:9000/)
+4. Run the evaluation web UI in another terminal window:
+   ```bash
+   python aristomini/evalui/evalui.py
+   ```
+
+5. Try the UI in your browser at [http://localhost:9000/](http://localhost:9000/)
 
 # Component overview
 
@@ -70,12 +75,13 @@ What is the color of the sky?
 Parts of this question are named like this:
 
 * **Question stem**: The non-choices part of the question. Example: `What is the color of the sky?`
-   
+
 * **Answer key**: The correct answer's choice label. Example: `A`
-  
+
 * **Choice**: One of the possible answers, consisting of a **choice label** (e.g., `A`) and **choice text** (e.g., `blue`).
-  
-These are represented with code in [the model/ directory](common/src/main/scala/org/allenai/aristomini/model/).
+
+These are modeled as `NamedTuple`s in
+[aristomini/common/models.py](aristomini/common/models.py).
 
 # Solvers
 
@@ -83,11 +89,17 @@ These are represented with code in [the model/ directory](common/src/main/scala/
 
 Several solvers are included in this distribution of Aristo mini. You can run one solver at a time for the Evaluation UI to use.
 
-### Random solver (in Scala)
+### Random solver
 
 This solver answers questions randomly. It illustrates the question-answer interface for a solver.
 
-Once started (see above) you can go to [http://localhost:8000/solver-info](http://localhost:8000/solver-info) to confirm that it is running.
+As above, you can start it with
+
+```bash
+python aristomini/solvers/randomguesser.py
+```
+
+Then you can go to [http://localhost:8000/solver-info](http://localhost:8000/solver-info) to confirm that it is running.
 
 To answer a question you can POST to `/answer`. To try it on the command line:
 
@@ -103,7 +115,7 @@ To answer a question you can POST to `/answer`. To try it on the command line:
       ]
    }
    ```
-   
+
 2. Submit the request with `curl`:
    ```bash
    % curl -H "Content-Type: application/json" --data @question.json http://localhost:8000/answer
@@ -131,7 +143,10 @@ To answer a question you can POST to `/answer`. To try it on the command line:
       "solverInfo" : "RandomGuesser"
    }
    ```
-### Text search solver (in Scala)
+
+### Text search solver
+
+
 
 See [solver/textsearch/README.md](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md) for setup and running instructions.
 
@@ -168,7 +183,7 @@ python python/aristomini/solvers/textsearch.py
 Use the `python/aristomini/scripts/train_word2vec_model.py` script to train a Word2Vec model
 from a text file of sentences (one per line). For instance, you could use the same sentences
 as the [text search solver](solvers/textsearch/src/main/scala/org/allenai/aristomini/solver/textsearch/README.md)
- 
+
 Then start the solver with the path to the word2vec model:
 
 ```
@@ -226,3 +241,4 @@ take look at [existing issues](https://github.com/allenai/aristo-mini/issues) or
 # History
 
 * November, 2016: Initial public release, version 1.
+* February, 2018: Delete all Scala code.

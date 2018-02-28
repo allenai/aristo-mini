@@ -1,0 +1,35 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+div.aristo-mini {
+    padding: 30px;
+}
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}
+
+.td-answer, .td-solver, .td-correct {
+    text-align: center;
+}
+
+.score-holder {
+    margin: 10px;
+    padding: 10px;
+    display: inline-block;
+}
+
+#score-label {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+td {
+    width: 100;
+    padding: 5px;
+}
