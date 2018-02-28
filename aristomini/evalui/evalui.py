@@ -20,7 +20,6 @@ EVALUI_PORT = 9000
 
 SOLVER_URL = f"http://{HOST}:{SOLVER_PORT}"
 
-# root/python/aristomini/evalui/evalui.py
 EVALUI_DIR = pathlib.Path(__file__).resolve().parent
 EXAM_DIR = EVALUI_DIR.parent.parent / 'questions'
 EXAM_PATHS = [exam for exam in EXAM_DIR.glob('*')]
