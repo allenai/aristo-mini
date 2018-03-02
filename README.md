@@ -35,7 +35,7 @@ Then follow these steps.
 
 3. Add the project to your PYTHONPATH
     ```
-    export PYTHONPATH=${PYTHONPATH}:.
+    export PYTHONPATH=$PYTHONPATH:`pwd`    
     ```
 
 4. Run the random solver in one terminal window:
