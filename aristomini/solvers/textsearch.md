@@ -101,7 +101,7 @@ curl -XPUT 'http://localhost:9200/knowledge' -d '
 
 ### Populate your Elasticsearch server with interesting sentences
 
-Aristo-mini includes a Python script ([insert-text-to-elasticsearch.py](/../../scripts/insert_text_to_elasticsearch.py) that will insert sentences from text files into a locally running Elasticsearch solver. To use it
+Aristo-mini includes a Python script ([insert_text_to_elasticsearch.py](/../../scripts/insert_text_to_elasticsearch.py) that will insert sentences from text files into a locally running Elasticsearch solver. To use it
 you'll need to obtain a text file with sentences and use this script.
 
 #### Obtain a text file
