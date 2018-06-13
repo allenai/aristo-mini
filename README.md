@@ -156,7 +156,7 @@ as the [text search solver](aristomini/solvers/textsearch.md)
 Then start the solver with the path to the word2vec model:
 
 ```
-python python/aristomini/solvers/wordvectorsimilarity.py /path/to/word2vec/model
+python aristomini/solvers/wordvectorsimilarity.py /path/to/word2vec/model
 ```
 
 ## Writing your own solver
